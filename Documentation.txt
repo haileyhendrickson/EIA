@@ -1,0 +1,11 @@
+Documentation for possible EIM API program
+
+https://www.eia.gov/opendata/browser/natural-gas/pri/fut - resource for checking data?
+https://www.eia.gov/opendata/documentation.php - posted documentation
+https://datons.ai/eia-api-automating-us-energy-data-with-python/ - other help
+
+7/1-
+Talked to Justin F about the desire for an EIM API program that allows for custom dates, time zone, and 
+balancing authority. Got registered for the API and got a super basic query going. Not sure if I have all the right parameters, but
+I can worry about that later.
+Also curious if I need to worry about the 5000 row limit, or if is unlikely someone will need that many rows (esp if it is monthly)
