@@ -9,3 +9,14 @@ Talked to Justin F about the desire for an EIM API program that allows for custo
 balancing authority. Got registered for the API and got a super basic query going. Not sure if I have all the right parameters, but
 I can worry about that later.
 Also curious if I need to worry about the 5000 row limit, or if is unlikely someone will need that many rows (esp if it is monthly)
+Tried adding timezone options into parameters. They ran, but didn't actually pull the different time. Might have to do it a different way.
+
+7/2-
+Discovered that only the UTC time is working for the eia pulls. 
+
+7/7-
+Fixed and added all timezones.
+Fixed the hours issues, so they line up with the requested date range, despite timezone shifts
+
+to do :
+- follow up with justin b?
