@@ -102,7 +102,7 @@ def backend(startdate, enddate, timezone):
     df_combined = pd.concat(df_list, ignore_index=True) # combining 30 day chunks
     df_combined = df_combined.drop(columns=['Unnamed: 0', 'value-units', 'type', 'respondent-name']) # bc I'm dropping units, rename columns later
     df_combined.rename(columns={'period':f'Timestamp {timecode}','respondent':'BA Code'},inplace=True)
-    df_combined = pd.pivot_table(df_combined, values='value', index=[f'Timestamp {timecode}','BA Code'], columns='type-name') # breaking out LMP_TYPE columns, keeping the other indexed columns
+    df_combined = pd.pivot_table(df_combined, values='value', index=[f'Timestamp {timecode}','BA Code'], columns='type-name').reset_index() # breaking out LMP_TYPE columns, keeping the other indexed columns
     df_combined.rename(columns={'Day-ahead demand forecast':f'Demand Forecast (MWh)','Demand':'Demand (MWh)','Net generation':'Net Generation (MWh)','Total interchange':'Total Interchange (MWh)'},inplace=True)
     
     if operand =='+': # trimming end by hours, trimming start by 24-hrs
