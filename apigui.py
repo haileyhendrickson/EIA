@@ -110,7 +110,7 @@ def backend(startdate, enddate, timezone):
     else:
         df_combined = df_combined.iloc[hours:-(25-hours)] 
 
-    df_combined.to_excel(f'{output_file_path}/{ba} Data {timestamp}.xlsx') # saving to one completed file
+    df_combined.to_excel(f'{output_file_path}/{ba} Data {timestamp}.xlsx', index=False) # saving to one completed file
 
     if getattr(sys, 'frozen', False): # finding file path to wherever GUI is stored
         application_path = os.path.dirname(sys.executable)

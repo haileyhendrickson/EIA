@@ -20,3 +20,7 @@ Fixed the hours issues, so they line up with the requested date range, despite t
 
 7/8-
 Fixed indexing error. Justin F approves! Uploaded to sharepoint with installation instructions.
+
+7/9-
+Talked with dad today. He needs facility generation data, also available at EIA. its a different report, but it
+pulls from the same API, so I'll just put it here for now. Working on main API pull framework.
