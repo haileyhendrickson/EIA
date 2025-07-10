@@ -1,0 +1,13 @@
+,period,plantCode,plantName,fuel2002,fuelTypeDescription,state,stateDescription,primeMover,gross-generation,gross-generation-units
+0,2022,10003,Colorado Energy Nations Company,ALL,Total,CO,Colorado,ALL,147032,megawatthours
+1,2022,10003,Colorado Energy Nations Company,BIT,Coal,CO,Colorado,ALL,0,megawatthours
+2,2022,10003,Colorado Energy Nations Company,DFO,Distillate Fuel Oil,CO,Colorado,ALL,0,megawatthours
+3,2022,10003,Colorado Energy Nations Company,NG,Natural Gas,CO,Colorado,ALL,147032,megawatthours
+4,2022,10003,Colorado Energy Nations Company,WO,Waste Oil and Other Oils,CO,Colorado,ALL,0,megawatthours
+5,2022,10005,Dinosaur Point,WND,Wind,CA,California,WT,11803,megawatthours
+6,2022,10003,Colorado Energy Nations Company,DFO,Distillate Fuel Oil,CO,Colorado,ST,0,megawatthours
+7,2022,10003,Colorado Energy Nations Company,NG,Natural Gas,CO,Colorado,ST,147032,megawatthours
+8,2022,10003,Colorado Energy Nations Company,WO,Waste Oil and Other Oils,CO,Colorado,ST,0,megawatthours
+9,2022,10005,Dinosaur Point,ALL,Total,CA,California,ALL,11803,megawatthours
+10,2022,10005,Dinosaur Point,WND,Wind,CA,California,ALL,11803,megawatthours
+11,2022,10003,Colorado Energy Nations Company,BIT,Coal,CO,Colorado,ST,0,megawatthours
