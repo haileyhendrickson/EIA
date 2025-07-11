@@ -33,6 +33,9 @@ Learned that I can pull multiple plants by separating them with a comma.
 Started building Gui working on conditional dropdowns, with the ability to switch pages.
 Started adding in all unit options. There are so many!
 
+7/11-
+Spent 4 hours finishing the state/units dictionary. 
+
 to do: 
 - get basic pull working- test how multiple units work
 - figure out best way to filter and pull in a way that makes sense
