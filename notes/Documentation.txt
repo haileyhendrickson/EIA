@@ -1,0 +1,47 @@
+Documentation for possible EIM API program
+
+https://www.eia.gov/opendata/browser/natural-gas/pri/fut - resource for checking data?
+https://www.eia.gov/opendata/documentation.php - posted documentation
+https://datons.ai/eia-api-automating-us-energy-data-with-python/ - other help
+
+other report type
+https://www.eia.gov/opendata/browser/electricity/facility-fuel?frequency=annual&data=generation;gross-generation;&facets=plantCode;&plantCode=10005;10250;10279;&start=2020&end=2021&sortColumn=period;&sortDirection=desc;
+
+7/1-
+Talked to Justin F about the desire for an EIM API program that allows for custom dates, time zone, and 
+balancing authority. Got registered for the API and got a super basic query going. Not sure if I have all the right parameters, but
+I can worry about that later.
+Also curious if I need to worry about the 5000 row limit, or if is unlikely someone will need that many rows (esp if it is monthly)
+Tried adding timezone options into parameters. They ran, but didn't actually pull the different time. Might have to do it a different way.
+
+7/2-
+Discovered that only the UTC time is working for the eia pulls. 
+
+7/7-
+Fixed and added all timezones.
+Fixed the hours issues, so they line up with the requested date range, despite timezone shifts
+
+7/8-
+Fixed indexing error. Justin F approves! Uploaded to sharepoint with installation instructions.
+
+7/9-
+Talked with dad today. He needs facility generation data, also available at EIA. its a different report, but it
+pulls from the same API, so I'll just put it here for now. Working on main API pull framework.
+
+7/10-
+Learned that I can pull multiple plants by separating them with a comma.
+Started building Gui working on conditional dropdowns, with the ability to switch pages.
+Started adding in all unit options. There are so many!
+
+7/11-
+Spent 4 hours finishing the state/units dictionary. 
+
+7/14-
+Formatted unit selection in GUI, used a tuple to get multiple units to run in the same query.
+Have a basic working product (for report B), pending feedback.
+
+Make it so you can select multiple states
+Research years limits (pass and present)
+Need to make pythonic
+Need to professionalize github
+
