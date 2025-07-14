@@ -38,6 +38,11 @@ Spent 4 hours finishing the state/units dictionary.
 
 7/14-
 Formatted unit selection in GUI, used a tuple to get multiple units to run in the same query.
+Have a basic working product (for report B), pending feedback.
+
+Need to fix final status label.
+Need to make pythonic
+Need to professionalize github
 
 to do: 
 - get basic pull working- test how multiple units work

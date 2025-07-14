@@ -1,21 +1,4 @@
-# have user choose which type of report: generation by BA or by unit (powerplant)
-# switch remaining inputs based off of report type
-    # Balancing Authority (Justin's report)
-    # Choose BA
-    # Choose date range
-    # Choose timezone
-    # submit!
-
-    # Unit (dad's report)
-    # choose year range (just make a dropdown? easier than calendar)
-    # choose state to filter units. Base unit dropdown on state
-        # select applicable units (option for multiple)
-        # submit!
-
 import os
-from zipfile import ZipFile
-from io import BytesIO
-import time
 from datetime import timedelta, datetime
 import sys
 
@@ -26,13 +9,9 @@ from tkinter import filedialog
 from customtkinter import (CTk, CTkButton, CTkLabel, CTkComboBox, CTkEntry, set_appearance_mode)
 from CTkListbox import CTkListbox
 from tkcalendar import Calendar
+import threading
 import pandas as pd
 import requests
-import matplotlib.pyplot as plt
-import seaborn as sns
-
-import openpyxl
-from openpyxl.styles import Font
 
 from state_units import state_options
 
@@ -149,7 +128,7 @@ def A_backend(startdate, enddate, timezone):
     root.update()            
 
 # REPORT B CODE
-def B_backend(startyr, endyr):
+def B_backend(startyr, endyr):  # Electric Power Operations  
     unit_count = unit_count_var.get()  
     startyr = int(startyr)
     endyr = int(endyr)
@@ -206,11 +185,18 @@ def B_backend(startyr, endyr):
     df_combined = df_combined.drop(columns=drop_cols)
     df_combined = df_combined.drop_duplicates() # dropping duplicate rows
     df_combined = df_combined.rename(columns={'period':'Year', 'gross-generation':'gross generation (MWh)'})
-    df_combined = df_combined.sort_values(df['plantName'])
+    df_combined = df_combined.sort_values(by='plantName')
     df_combined.to_excel(f'{output_file_path}/{unit_name} {startyr}-{endyr}.xlsx', index=False)
+
+    if getattr(sys, 'frozen', False): # finding file path to wherever GUI is stored
+        application_path = os.path.dirname(sys.executable)
+    for csv in files: # deleting extra files
+        filepath = os.path.join(application_path, csv) # creating path to CSV file that will populate in the GUI folder
+        os.remove(filepath) # deleting files
 
     status_lbl.configure(text='Finished!') 
     root.update() 
+    # threading.Thread(target=B_backend, args=(startyr_var.get(), endyr_var.get()), daemon=True).start()
 
 # tkinter program
 root = CTk() # initializing window
@@ -238,10 +224,10 @@ def select_output_file(): # for selecting excel output file path
 
 def submit(): # after user gives all inputs, runs all of the backend code
     report = report_var.get()
-    if report == 'Report A':
+    if report == 'Natural Gas Prices':
         timezone=timezoneDropdown.get()
         A_backend(startdate, enddate, timezone)
-    if report == 'Report B':
+    if report == 'Electric Power Operations':
         units = unit_dropdown.get() # returns list of selected items
         codes = [unit.split('(')[-1].strip(')') for unit in units]
         unit_name = [unit.split(' (')[0] for unit in units]
@@ -253,12 +239,12 @@ def submit(): # after user gives all inputs, runs all of the backend code
         startyr = start_year_dropdown.get()
         endyr = end_year_dropdown.get()
         B_backend(startyr, endyr)
-    status_lbl.configure(text='Running...')
-    root.update() # updating status label
+    # status_lbl.configure(text='Running...')
+    # root.update() # updating status label
 
 def show_second_dropdown(choice):
     report_var.set(choice) # creating a variable to use later
-    if choice == 'Report A':
+    if choice == 'Natural Gas Prices':
         # forget old labels
         start_year_label.grid_forget()
         start_year_dropdown.grid_forget()
@@ -279,7 +265,7 @@ def show_second_dropdown(choice):
         startdate_label.grid(row=4, column=1)
         enddate_label.grid(row=5, column=1)
 
-    if choice == 'Report B':
+    if choice == 'Electric Power Operations':
         # forget old labels
         ba_label.grid_forget()
         ba_entry.grid_forget()
@@ -292,12 +278,12 @@ def show_second_dropdown(choice):
         enddate_label.grid_forget()
 
         # report b labels here
-        start_year_label.grid()
-        start_year_dropdown.grid()
-        end_year_dropdown.grid()
-        state_label.grid()
-        state_dropdown.grid()
-        sub_btn.grid()
+        start_year_label.grid(row=3,column=0)
+        start_year_dropdown.grid(row=4,column=0)
+        end_year_dropdown.grid(row=5,column=0)
+        state_label.grid(row=2,column=2)
+        state_dropdown.grid(row=3,column=2)
+        sub_btn.grid(row=6,column=0)
   
 # report A widget functions     
 def findStartDate(): # for selecting the start date
@@ -312,7 +298,7 @@ def findEndDate(): # for selecting the end date
 
 # report B widget functions
 def show_units(selected_state):
-    unit_dropdown.grid() # showing units once a state is selected
+    unit_dropdown.grid(row=6,column=2) # showing units once a state is selected
     units = state_options.get(selected_state, [])
     unit_dropdown.delete(0,"end")
     for unit in units:
@@ -322,7 +308,7 @@ def show_units(selected_state):
 
 # WIDGETS
 # front page widgets
-options1 = ['Select Report Type', 'Report A', 'Report B']
+options1 = ['Select Report Type', 'Natural Gas Prices', 'Electric Power Operations']
 var1 = tk.StringVar(value=options1[0])
 dropdown1 = CTkComboBox(root, variable=var1, values=options1, command=show_second_dropdown)
 dropdown1.grid(column=0,row=0)
