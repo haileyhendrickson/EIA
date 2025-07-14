@@ -36,6 +36,9 @@ Started adding in all unit options. There are so many!
 7/11-
 Spent 4 hours finishing the state/units dictionary. 
 
+7/14-
+Formatted unit selection in GUI, used a tuple to get multiple units to run in the same query.
+
 to do: 
 - get basic pull working- test how multiple units work
 - figure out best way to filter and pull in a way that makes sense
