@@ -1,6 +1,6 @@
 # EIA API
 
-A GUI-based Python tool to query two reports from the EIA API. The program efficiently queries a Natural Gas Prices and Futures report, and an Electric Power Operations report from https://www.eia.gov/opendata/browser/natural-gas/pri and https://www.eia.gov/opendata/browser/electricity/facility-fuel, respectively
+A GUI-based Python tool to query two reports from the EIA API. The program efficiently queries a Natural Gas Prices and Futures report, and an Electric Power Operations report from https://www.eia.gov/opendata/browser/natural-gas/pri and https://www.eia.gov/opendata/browser/electricity/facility-fuel, respectively.
 
 ## 🔧 Features
 - Select date ranges
