@@ -24,7 +24,12 @@ A GUI-based Python tool to query two reports from the EIA API. The program effic
 
 
 ## Use
-Download .exe file to local machine, open it, and enjoy!
+1. Download the `.exe` file
+2. Run the application
+3. Select your report type
+4. Choose date range
+5. Click "Generate Report"
+6. Export to Excel
 
 ## Running on a Local Machine:
 - python -m venv venv  # create a new env
