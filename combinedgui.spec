@@ -2,7 +2,7 @@
 
 
 a = Analysis(
-    ['combinedgui.py'],
+    ['src\\combinedgui.py'],
     pathex=[],
     binaries=[],
     datas=[],

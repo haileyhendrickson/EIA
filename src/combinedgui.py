@@ -1,22 +1,20 @@
 import os
-from datetime import timedelta, datetime
 import sys
+from datetime import datetime, timedelta
 
 import tkinter as tk
 from tkinter import filedialog
-import tkinter as tk
-from tkinter import filedialog
+import pandas as pd
+import requests
 from customtkinter import (CTk, CTkButton, CTkLabel, CTkComboBox, CTkEntry, set_appearance_mode)
 from CTkListbox import CTkListbox
 from tkcalendar import Calendar
-import pandas as pd
-import requests
 
 from EIA.src.state_units import state_options  # File containing list of all units, grouped by state
 
-
+API_KEY = os.getenv('EIA_API_KEY', 'h6SzHD7npQ0r1YVfC7HZHEMu7LZ74yx2m9EcbSHD')
 # Natural Gas Prices Code
-def A_backend(startdate, enddate, timezone):
+def natural_gas_report(startdate, enddate, timezone):
     map = {  # Finds UTC difference and associated time code, based on 24 major timezones
         ('Universal Time'): ('00', '(UTC)', '+'),
         ('Mountain Time'): ('07', '(MST)', '-'),
@@ -68,7 +66,7 @@ def A_backend(startdate, enddate, timezone):
     while totalrows > 0:
         try:
             url = 'https://api.eia.gov/v2/electricity/rto/region-data/data/?'  # Main URL for natural gas prices for a futures exchange
-            params = {'api_key': 'h6SzHD7npQ0r1YVfC7HZHEMu7LZ74yx2m9EcbSHD',
+            params = {'api_key': API_KEY,
                         'frequency' : 'hourly',
                         'data[0]' : 'value',  # Specifying what columns to include
                         'facets[respondent][]' : ba,  # Specifies balancing authority
@@ -126,7 +124,7 @@ def A_backend(startdate, enddate, timezone):
     root.update()            
 
 # Electric Power Operations Code
-def B_backend(startyr, endyr):
+def electric_power_operations_report(startyr, endyr):
     unit_count = unit_count_var.get()
     startyr = int(startyr)
     endyr = int(endyr)
@@ -145,7 +143,7 @@ def B_backend(startyr, endyr):
     while totalrows > 0:
         try:
             url = 'https://api.eia.gov/v2/electricity/facility-fuel/data/?'  # Main URL for electric power operations
-            params = {'api_key': 'h6SzHD7npQ0r1YVfC7HZHEMu7LZ74yx2m9EcbSHD',
+            params = {'api_key': API_KEY,
                         'frequency': 'annual',
                         'data[0]': 'gross-generation',
                         'data[1]': 'generation',
@@ -217,7 +215,7 @@ def submit():  # After user gives all inputs, runs all of the backend code, depe
     report = report_var.get()
     if report == 'Natural Gas Prices':
         timezone=timezoneDropdown.get()
-        A_backend(startdate, enddate, timezone)
+        natural_gas_report(startdate, enddate, timezone)
     if report == 'Electric Power Operations':
         units = unit_dropdown.get()  # Returns list of selected items
         codes = [unit.split('(')[-1].strip(')') for unit in units]
@@ -229,7 +227,7 @@ def submit():  # After user gives all inputs, runs all of the backend code, depe
         unit_count_var.set(unit_count)
         startyr = start_year_dropdown.get()
         endyr = end_year_dropdown.get()
-        B_backend(startyr, endyr)
+        electric_power_operations_report(startyr, endyr)
 
 def show_second_dropdown(choice):
     report_var.set(choice)  # Creating a variable to use later

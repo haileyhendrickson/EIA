@@ -34,6 +34,7 @@ missing module named multiprocessing.set_start_method - imported by multiprocess
 missing module named multiprocessing.get_start_method - imported by multiprocessing (top-level), multiprocessing.spawn (top-level)
 missing module named pyimod02_importers - imported by C:\Users\hhendrickson\AppData\Local\Programs\Python\Python313\Lib\site-packages\PyInstaller\hooks\rthooks\pyi_rth_pkgutil.py (delayed)
 missing module named collections.Mapping - imported by collections (optional), pytz.lazy (optional)
+missing module named EIA - imported by C:\Users\hhendrickson\ES\EIA\src\combinedgui.py (top-level)
 missing module named simplejson - imported by requests.compat (conditional, optional)
 missing module named dummy_threading - imported by requests.cookies (optional)
 missing module named asyncio.DefaultEventLoopPolicy - imported by asyncio (delayed, conditional), asyncio.events (delayed, conditional)
