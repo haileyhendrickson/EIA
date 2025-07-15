@@ -26,7 +26,7 @@ Download .exe file to local machine, open it, and enjoy!
 - Temporary partial files will appear during data retrieval but are deleted when processing completes.
 
 
-## Version History -- Last updated: July 2025 (version 2.2) 
+## Version History -- Last updated: July 2025 (version 2) 
 - v1.0: Initial release - Included Natural Gas Report
 - v2.0: Added Energy Power Operations Report
 
