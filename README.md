@@ -24,6 +24,12 @@ A GUI-based Python tool to query two reports from the EIA API. The program effic
 5. Click "Generate Report"
 6. Export to Excel
 
+### For End Users
+The application comes pre-configured with an API key - no setup required! Just download and run.
+
+### For Developers
+To build from source, you'll need to set the `EIA_API_KEY` environment variable before building.
+
 ## Running on a Local Machine:
 - python -m venv venv  # create a new env
 - source venv/Scripts/activate  # activate env
