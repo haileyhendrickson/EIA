@@ -2,13 +2,14 @@
 
 A GUI-based Python tool to query two reports from the EIA API. The program efficiently queries a Natural Gas Prices and Futures report, and an Electric Power Operations report from https://www.eia.gov/opendata/browser/natural-gas/pri and https://www.eia.gov/opendata/browser/electricity/facility-fuel, respectively.
 
-## 🔧 Features
-- No Python install needed!
-- Select date ranges
-- Quickly download and extract zipped data
-- Export processed Excel files
+## Features
+- 📊 **Natural Gas Prices & Futures** - Query comprehensive pricing data
+- ⚡ **Electric Power Operations** - Access facility and fuel data  
+- 📅 **Flexible Date Ranges** - Select custom time periods
+- 📁 **Excel Export** - Processed data ready for analysis
+- 🖥️ **User-Friendly GUI** - No command line required
 
-## 📦 Installation
+## Installation
 
 1. Clone this repository:
    ```bash
