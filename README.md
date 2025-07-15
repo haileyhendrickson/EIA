@@ -16,14 +16,6 @@ A GUI-based Python tool to query two reports from the EIA API. The program effic
    git clone https://github.com/haileyhendrickson/EIA.git
    cd EIA
 
-## Setup and Configuration
-### 1. Get Your EIA API Key
-1. Visit EIA's API registration page at https://www.eia.gov/opendata/register.php
-2. Register for a free account
-3. Copy your API key from your account dashboard
-### 2. Configure API Key
-
-
 ## Use
 1. Download the `.exe` file
 2. Run the application
