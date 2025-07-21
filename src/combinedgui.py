@@ -3,18 +3,22 @@ import sys
 from datetime import datetime, timedelta
 
 import tkinter as tk
-from tkinter import filedialog
+from tkinter import filedialog, ttk
+
 import pandas as pd
 import requests
+
 from customtkinter import (CTk, CTkButton, CTkLabel, CTkComboBox, CTkEntry, set_appearance_mode)
-from CTkListbox import CTkListbox
 from tkcalendar import Calendar
 
-from EIA.src.state_units import state_options  # File containing list of all units, grouped by state
+from state_units import state_options  # File containing list of all units, grouped by state
 
 API_KEY = os.getenv('EIA_API_KEY', 'h6SzHD7npQ0r1YVfC7HZHEMu7LZ74yx2m9EcbSHD')
 # Natural Gas Prices Code
 def natural_gas_report(startdate, enddate, timezone):
+    '''
+    This method pulls the EIA Natural Gas Report and cleans it mildly.
+    '''
     map = {  # Finds UTC difference and associated time code, based on 24 major timezones
         ('Universal Time'): ('00', '(UTC)', '+'),
         ('Mountain Time'): ('07', '(MST)', '-'),
@@ -41,17 +45,17 @@ def natural_gas_report(startdate, enddate, timezone):
         ('Central African Time'): ('01', 'CAT', '-')
     }
 
-    hours, timecode, operand = map.get((timezone), ('unknown'))  # Getting timezone variables from map based on user input
+    hours, timecode, operand = map.get((timezone), ('unknown'))
     ba=ba_var.get()
 
     # Finding how many expected rows. One month = about 3000 rows.
-    startdate = datetime.strptime(startdate, '%m/%d/%y').date()  # Formats it to work with datetime package
+    startdate = datetime.strptime(startdate, '%m/%d/%y').date()  # Formats to work with datetime
     enddate = datetime.strptime(enddate, '%m/%d/%y').date()
     if operand == '+':
-        enddate = enddate + timedelta(days=1)  # Adding on one day to the desired pull so it gets the full last day
+        enddate = enddate + timedelta(days=1)  # Adding one day to pull so it gets full last day
         startdate = startdate - timedelta(days=1)
     else:
-        enddate = enddate + timedelta(days=2)  # Adding on two days to the desired pull so it gets the full last day
+        enddate = enddate + timedelta(days=2)  # Adding two days to pull so it gets full last day
     difference = enddate - startdate
     days = difference.days
     totalrows = (days*24)*4  # 4 Rows of data per hour
@@ -65,7 +69,7 @@ def natural_gas_report(startdate, enddate, timezone):
     timestamp = timestamp.strftime('%m-%d-%Y %H%M')
     while totalrows > 0:
         try:
-            url = 'https://api.eia.gov/v2/electricity/rto/region-data/data/?'  # Main URL for natural gas prices for a futures exchange
+            url = 'https://api.eia.gov/v2/electricity/rto/region-data/data/?'
             params = {'api_key': API_KEY,
                         'frequency' : 'hourly',
                         'data[0]' : 'value',  # Specifying what columns to include
@@ -81,7 +85,7 @@ def natural_gas_report(startdate, enddate, timezone):
             response = requests.get(url, params=params)
             data = response.json()
             df = pd.DataFrame(data['response']['data'])
-            # Fixing timezone   
+            # Fixing timezone
             hours = int(hours)
             df['period'] = pd.to_datetime(df['period'])  # Changing period column to datetime
             if operand == '+':  # Shifting hours forward or back depending on difference from UTC
@@ -91,28 +95,35 @@ def natural_gas_report(startdate, enddate, timezone):
             df.to_csv(f'test{counter}.csv')  # Saving chunks to csvs to combine later
         except Exception as e:
             print(f'error: {e}')
-            status_lbl.configure(text='Error. Try again.')  # Updating status label if API pull fails
-            root.update() 
+            status_lbl.configure(text='Error. Try again.')  # Updating label if API pull fails
+            root.update()
         totalrows -= 5000  # Take off rows that just printed
         offset += 5000  # Offsets so I can pull the next chunk of data next time
-        files.append(f'test{counter}.csv')  # Adding pulled files to list    
+        files.append(f'test{counter}.csv')  # Adding pulled files to list
         counter +=1
 
     for file in files:
         df_list.append(pd.read_csv(file))  # Adding individual rows to df.list
 
     df_combined = pd.concat(df_list, ignore_index=True)
-    df_combined = df_combined.drop(columns=['Unnamed: 0', 'value-units', 'type', 'respondent-name'])
-    df_combined.rename(columns={'period':f'Timestamp {timecode}','respondent':'BA Code'},inplace=True)
-    df_combined = pd.pivot_table(df_combined, values='value', index=[f'Timestamp {timecode}','BA Code'], columns='type-name').reset_index()  # Breaking out generation columns, keeping the other indexed columns
-    df_combined.rename(columns={'Day-ahead demand forecast':'Demand Forecast (MWh)','Demand':'Demand (MWh)','Net generation':'Net Generation (MWh)','Total interchange':'Total Interchange (MWh)'},inplace=True)
-    
+    df_combined = df_combined.drop(columns=['Unnamed: 0', 'value-units', 'type',
+                                            'respondent-name'])
+    df_combined.rename(columns={'period':f'Timestamp {timecode}','respondent':'BA Code'},
+                                inplace=True)
+    # Breaking out generation columns, keeping the other indexed columns
+    df_combined = pd.pivot_table(df_combined, values='value',
+                                 index=[f'Timestamp {timecode}','BA Code'],
+                                 columns='type-name').reset_index()
+    df_combined.rename(columns={'Day-ahead demand forecast':'Demand Forecast (MWh)',
+                                'Demand':'Demand (MWh)','Net generation':'Net Generation (MWh)',
+                                'Total interchange':'Total Interchange (MWh)'},inplace=True)
+
     if operand =='+':  # Trimming end by hours, trimming start by 24-hrs
         df_combined = df_combined.iloc[(24-hours):-(hours+1)]
     else:
-        df_combined = df_combined.iloc[hours:-(25-hours)] 
+        df_combined = df_combined.iloc[hours:-(25-hours)]
 
-    df_combined.to_excel(f'{output_file_path}/{ba} Data {timestamp}.xlsx', index=False)  # Saving to one completed file
+    df_combined.to_excel(f'{output_file_path}/{ba} Data {timestamp}.xlsx', index=False)
 
     if getattr(sys, 'frozen', False):  # Finding path to GUI location and deleting csv file chunks
         application_path = os.path.dirname(sys.executable)
@@ -120,15 +131,18 @@ def natural_gas_report(startdate, enddate, timezone):
         filepath = os.path.join(application_path, csv)
         os.remove(filepath)
 
-    status_lbl.configure(text='Finished!')  # Updating status label 
-    root.update()            
+    status_lbl.configure(text='Finished!')  # Updating status label
+    root.update()
 
 # Electric Power Operations Code
 def electric_power_operations_report(startyr, endyr):
+    '''
+    This method pulls the EIA Electric Power Operations report and cleans it slightly.
+    '''
     unit_count = unit_count_var.get()
     startyr = int(startyr)
     endyr = int(endyr)
-    total_years =  (endyr - startyr) + 1  # Calculating number of years to determine rows needed to pull
+    total_years =  (endyr - startyr) + 1
     totalrows = (total_years *10)*unit_count  # Allowing for 10 rows per year per unit
     # Setting up for pull
     units = units_var.get()
@@ -142,7 +156,7 @@ def electric_power_operations_report(startyr, endyr):
     timestamp = timestamp.strftime('%m-%d-%Y %H%M')
     while totalrows > 0:
         try:
-            url = 'https://api.eia.gov/v2/electricity/facility-fuel/data/?'  # Main URL for electric power operations
+            url = 'https://api.eia.gov/v2/electricity/facility-fuel/data/?'
             params = {'api_key': API_KEY,
                         'frequency': 'annual',
                         'data[0]': 'gross-generation',
@@ -155,7 +169,8 @@ def electric_power_operations_report(startyr, endyr):
                         'offset': offset,
                         'length': 5000
                     }
-            response = requests.get(url, params=params)
+            print(f'url: {url}, params: {params}')
+            response = requests.get(url, params=params, timeout=100000)
             data = response.json()
             df = pd.DataFrame(data['response']['data'])
             df.to_csv(f'test{counter}.csv')
@@ -173,11 +188,13 @@ def electric_power_operations_report(startyr, endyr):
     else:
         df_combined = pd.read_csv('test0.csv')
 
-    drop_cols = ['Unnamed: 0', 'stateDescription', 'fuel2002', 'primeMover', 'gross-generation-units']  # Columns to drop
+    drop_cols = ['Unnamed: 0', 'stateDescription', 'fuel2002', 'primeMover',
+                 'gross-generation-units']
     drop_cols = [col for col in drop_cols if col in df_combined.columns]
     df_combined = df_combined.drop(columns=drop_cols)
     df_combined = df_combined.drop_duplicates()  # Dropping duplicate rows
-    df_combined = df_combined.rename(columns={'period':'Year', 'gross-generation':'gross generation (MWh)'})
+    df_combined = df_combined.rename(columns={'period':'Year',
+                                              'gross-generation':'gross generation (MWh)'})
     df_combined = df_combined.sort_values(by='plantName')
     df_combined.to_excel(f'{output_file_path}/{unit_name} {startyr}-{endyr}.xlsx', index=False)
 
@@ -185,11 +202,11 @@ def electric_power_operations_report(startyr, endyr):
         application_path = os.path.dirname(sys.executable)
     for csv in files:
         filepath = os.path.join(application_path, csv)
-        os.remove(filepath) 
+        os.remove(filepath)
 
 # Tkinter program
 root = CTk()
-root.geometry('600x400')
+root.geometry('600x600')
 set_appearance_mode('light')
 report_var=tk.StringVar()
 ba_var=tk.StringVar()  # Needed for natural gas report
@@ -202,24 +219,30 @@ unit_name_var=tk.StringVar()
 
 # FUNCTIONS
 # Front page functions
-def select_output_file():  # For selecting excel output file path
+def select_output_file():
+    '''
+    For selecting excel output file path.
+    '''
     global output_file_path
     directory = filedialog.askdirectory(title='Select output directory')
     if directory:
         output_file_path = directory
         output_file_label.configure(text=directory)  # Displaying file path
     else:
-        output_file_label.configure(text='No directory selected yet')  # If attempted to submit without a filepath
+        output_file_label.configure(text='No directory selected yet')  # If submitting w/o filepath
 
-def submit():  # After user gives all inputs, runs all of the backend code, depending on report type
+def submit():
+    '''
+    After user gives all inputs, runs all of the backend code, depending on report type.
+    '''
     report = report_var.get()
     if report == 'Natural Gas Prices':
         timezone=timezoneDropdown.get()
         natural_gas_report(startdate, enddate, timezone)
     if report == 'Electric Power Operations':
-        units = unit_dropdown.get()  # Returns list of selected items
-        codes = [unit.split('(')[-1].strip(')') for unit in units]
-        unit_name = [unit.split(' (')[0] for unit in units]
+        unit_names = [treeview.item(iid)['text'] for iid in treeview.selection()]
+        codes = [unit_names.split('(')[-1].strip(')') for unit in unit_names]
+        unit_name = [unit_names.split(' (')[0] for unit in unit_names]
         unit_name_var.set(unit_name)
         units = ",".join(codes)  # Joining codes with a comma
         units_var.set(units)
@@ -230,15 +253,17 @@ def submit():  # After user gives all inputs, runs all of the backend code, depe
         electric_power_operations_report(startyr, endyr)
 
 def show_second_dropdown(choice):
+    '''
+    This method changes the widgets on the GUI to match up with the desired report type inputs.
+    '''
     report_var.set(choice)  # Creating a variable to use later
     if choice == 'Natural Gas Prices':
         # Forget old labels
         start_year_label.grid_forget()
         start_year_dropdown.grid_forget()
         end_year_dropdown.grid_forget()
-        state_label.grid_forget()
-        state_dropdown.grid_forget()
-        unit_dropdown.grid_forget()
+        treeview.grid_forget()
+        scrollbar.grid_forget()
 
         # Natural Gas labels here
         ba_label.grid(row=3, column=1)
@@ -246,7 +271,7 @@ def show_second_dropdown(choice):
         timezone_label.grid(row=1, column=1)
         timezoneDropdown.grid(row=1, column=2)
         cal.grid(row=6,column=0)
-        chooseStartDate.grid(row=4,column=0) 
+        chooseStartDate.grid(row=4,column=0)
         chooseEndDate.grid(row=5,column=0)
         sub_btn.grid(row=6,column=2)
         startdate_label.grid(row=4, column=1)
@@ -265,32 +290,50 @@ def show_second_dropdown(choice):
         enddate_label.grid_forget()
 
         # Electric Power Operations labels here
-        start_year_label.grid(row=3,column=0)
-        start_year_dropdown.grid(row=4,column=0)
-        end_year_dropdown.grid(row=5,column=0)
-        state_label.grid(row=2,column=2)
-        state_dropdown.grid(row=3,column=2)
-        sub_btn.grid(row=6,column=0)
-  
+        start_year_label.grid(row=4,column=0)
+        start_year_dropdown.grid(row=5,column=0)
+        end_year_dropdown.grid(row=6,column=0)
+        sub_btn.grid(row=7,column=0)
+        treeview.grid(row=3,column=2, sticky='nsew')
+        scrollbar.grid(row=3,column=3, sticky='ns')
+
+
 # Natural Gas Report widget functions     
-def findStartDate():  # For selecting the start date
+def find_start_date():
+    '''
+    For selecting the start date.
+    '''
     global startdate
     startdate = cal.get_date()
     startdate_label.configure(text=f'Start date: {startdate}')
 
-def findEndDate():  # For selecting the end date
+def find_end_date():
+    '''
+    For selecting the end date
+    '''
     global enddate
     enddate = cal.get_date()
     enddate_label.configure(text=f'End date: {enddate}')
 
 # Electric Power Operations Report widget functions
-def show_units(selected_state):
-    unit_dropdown.grid(row=6,column=2)  # Showing units once a state is selected
-    units = state_options.get(selected_state, [])
-    unit_dropdown.delete(0,"end")
-    for unit in units:
-        unit_dropdown.insert("end", unit)
-    unit_dropdown.grid()
+def get_unit_names():
+    '''
+    IDK, this method is supposed to help me get the actual unit names
+    '''
+    selected_iids = treeview.selection()
+    selected_unit_names = [treeview.item(iid)['text'] for iid in selected_iids]
+    return selected_unit_names
+
+def on_row_click(event):
+    '''
+    This method will help multi-unit selection more intuitive. Users can just click, instead of
+    holding the CTRL button to select multiple.
+    '''
+    item = treeview.identify_row(event.y)
+    if item in treeview_selection():
+        treeview.selection_remove(item)
+    else:
+        treeview.selection_add(item)
 
 
 # WIDGETS
@@ -299,51 +342,68 @@ options1 = ['Select Report Type', 'Natural Gas Prices', 'Electric Power Operatio
 var1 = tk.StringVar(value=options1[0])
 dropdown1 = CTkComboBox(root, variable=var1, values=options1, command=show_second_dropdown)
 dropdown1.grid(column=0,row=0)
-output_file_button = CTkButton(root, text='Select Output File Path', command=select_output_file, corner_radius=32,fg_color='#162157', hover_color='#6D7DCF')
-output_file_label = CTkLabel(root, text='No path selected', font=('Arial',10), text_color='#04033A')
-title_lbl = CTkLabel(root, text='EIA Generation Data', font=('Arial',20, 'bold'), text_color='#04033A')
+output_file_button = CTkButton(root, text='Select Output File Path', command=select_output_file,
+                               corner_radius=32,fg_color='#162157', hover_color='#6D7DCF')
+output_file_label = CTkLabel(root, text='No path selected', font=('Arial',10),
+                             text_color='#04033A')
+title_lbl = CTkLabel(root, text='EIA Generation Data', font=('Arial',20, 'bold'),
+                     text_color='#04033A')
 
 # Natural Gas widgets
 timezone_label = CTkLabel(root, text = 'Timezone:', font=('Arial',15), text_color='#04033A')
-timezoneDropdown = CTkComboBox(master=root, values=['Universal Time', 'Mountain Time', 'Pacific Time', 'Central Time', 'Eastern Time', 'European Central Time',
-                                                    'Eastern Eurpoean Time','Eastern African Time','Near East Time','Pakistan Lahore Time','Bangladesh Standard Time',
-                                                    'Vietnam Standard Time','China Taiwan Time','Japan Standard Time','Australia Eastern Time','Solomon Standard Time',
-                                                    'New Zealand Standard Time','Midway Islands Time','Hawaii Standard Time','Alaska Standard Time',
-                                                    'Puerto Rico and US Virtin Islands Time','Argentina Standard/Brazil Eastern Time','Central African Time'])
+timezoneDropdown = CTkComboBox(master=root, values=['Universal Time', 'Mountain Time',
+                               'Pacific Time', 'Central Time', 'Eastern Time',
+                               'European Central Time', 'Eastern Eurpoean Time',
+                               'Eastern African Time','Near East Time','Pakistan Lahore Time',
+                               'Bangladesh Standard Time','Vietnam Standard Time',
+                               'China Taiwan Time','Japan Standard Time','Australia Eastern Time',
+                               'Solomon Standard Time','New Zealand Standard Time',
+                               'Midway Islands Time','Hawaii Standard Time',
+                               'Alaska Standard Time','Puerto Rico and US Virtin Islands Time',
+                               'Argentina Standard/Brazil Eastern Time','Central African Time'])
 cal = Calendar(root, selectmode ='day', year=2024, month =1, day = 1, font=('Arial', 15))
-chooseStartDate = CTkButton(root, text='Choose Start Date', command=findStartDate, corner_radius=26,fg_color='#162157', hover_color='#6D7DCF')
-chooseEndDate = CTkButton(root, text='Choose End Date', command=findEndDate, corner_radius=26,fg_color='#162157', hover_color='#6D7DCF')
-startdate_label = CTkLabel(root, text= 'Start Date: ', font=('Arial',15), text_color='#04033A') 
+chooseStartDate = CTkButton(root, text='Choose Start Date', command=find_start_date,
+                            corner_radius=26,fg_color='#162157', hover_color='#6D7DCF')
+chooseEndDate = CTkButton(root, text='Choose End Date', command=find_end_date, corner_radius=26,
+                          fg_color='#162157', hover_color='#6D7DCF')
+startdate_label = CTkLabel(root, text= 'Start Date: ', font=('Arial',15), text_color='#04033A')
 enddate_label = CTkLabel(root, text='End Date: ', font=('Arial',15), text_color='#04033A')
 ba_label = CTkLabel(root, text='BA Code:', font=('Arial',15), text_color='#04033A')
 ba_entry = CTkEntry(root, textvariable = ba_var, font=('Arial',15), text_color='#04033A')
 
 # Electric Power Operations widgets
 start_year_label = CTkLabel(root, text='Choose Start and End year:')
-start_year_dropdown = CTkComboBox(root, values=['2000', '2000', '2002', '2003', '2004', '2005', '2006', '2007', '2008', '2000', '2010','2011',
-                                                '2012', '2013', '2014', '2015', '2016', '2017', '2018', '2019', '2020', '2021', '2022', '2023',
-                                                '2024', '2025', '2027', '2028', '2029', '2030'])
-end_year_dropdown = CTkComboBox(root, values=['2000', '2000', '2002', '2003', '2004', '2005', '2006', '2007', '2008', '2000', '2010','2011',
-                                              '2012', '2013', '2014', '2015', '2016', '2017', '2018', '2019', '2020', '2021', '2022', '2023',
-                                              '2024', '2025', '2027', '2028', '2029', '2030'])
-state_label = CTkLabel(root, text='Choose State of Unit: ')
-states = ['AL', 'AK', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DE', 'FL', 'GA',
-          'HI', 'ID', 'IL', 'IN', 'IA', 'KS', 'KY', 'LA', 'ME', 'MD',
-          'MA', 'MI', 'MN', 'MS', 'MO', 'MT', 'NE', 'NV', 'NH', 'NJ',
-          'NM', 'NY', 'NC', 'ND', 'OH', 'OK', 'OR', 'PA', 'RI', 'SC',
-          'SD', 'TN', 'TX', 'UT', 'VT', 'VA', 'WA', 'WV', 'WI', 'WY']
-state_dropdown = CTkComboBox(root, values=states, command=show_units)  # For selecting a state
-unit_dropdown = CTkListbox(master=root, listvariable=[], multiple_selection=True)
+start_year_dropdown = CTkComboBox(root, values=['2001', '2002', '2003', '2004', '2005', '2006',
+                                                '2007', '2008', '2000', '2010','2011','2012',
+                                                '2013', '2014', '2015', '2016', '2017', '2018',
+                                                '2019', '2020', '2021', '2022', '2023', '2024',
+                                                '2025'])
+end_year_dropdown = CTkComboBox(root, values=['2001', '2002', '2003', '2004', '2005', '2006',
+                                              '2007', '2008', '2000', '2010','2011', '2012',
+                                              '2013', '2014', '2015', '2016', '2017', '2018',
+                                              '2019', '2020', '2021', '2022', '2023', '2024',
+                                              '2025'])
+
+treeview = ttk.Treeview(root, selectmode='extended')
+for state in state_options:
+    parent_id = treeview.insert('', tk.END, text=state)
+    for unit in state_options[state]:
+        treeview.insert(parent_id, tk.END, text=unit)
+
+scrollbar = ttk.Scrollbar(root, orient='vertical', command=treeview.yview)
+treeview.configure(yscrollcommand=scrollbar.set)
+treeview.bind('<Button-1>', on_row_click)
 
 # All other widgets
 status_lbl = CTkLabel(root, text='', font=('Arial',15), text_color='#04033A')
-sub_btn=CTkButton(master=root,text = 'Submit', command = submit, corner_radius=32,fg_color='#162157', hover_color='#6D7DCF') 
+sub_btn=CTkButton(master=root,text = 'Submit', command = submit, corner_radius=32,
+                  fg_color='#162157', hover_color='#6D7DCF')
 
 
 # Grid- first page
 output_file_button.grid(row=1, column=0)
 output_file_label.grid(row=2, column=0)
 title_lbl.grid(row=0, column=2)
-status_lbl.grid(row=7,column=2) 
+status_lbl.grid(row=7,column=2)
 
 root.mainloop()

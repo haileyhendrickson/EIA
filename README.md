@@ -21,7 +21,7 @@ A GUI-based Python tool to query two reports from the EIA API. The program effic
 2. Run the application
 3. Select your report type
 4. Choose date range
-5. Click "Generate Report"
+5. Click "Submit"
 6. Export to Excel
 
 ### For End Users

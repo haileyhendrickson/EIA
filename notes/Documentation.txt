@@ -40,8 +40,15 @@ Spent 4 hours finishing the state/units dictionary.
 Formatted unit selection in GUI, used a tuple to get multiple units to run in the same query.
 Have a basic working product (for report B), pending feedback.
 
+7/21-
+When I run it from git, I can select different plants from different states. When I try with the .exe file, it breaks. So weird.
+Apparently I need copmletely different logic. It might be easier to have two listboxes. One for states, one for plants?
+NOTE FOR USE: For the electric power operations report, the user must select all states first, then the units. (maybe change later?)
+
 Make it so you can select multiple states
-Research years limits (pass and present)
 Need to make pythonic
 Need to professionalize github
+
+NOTES FOR UPDATING:
+You can only pull through the current year. Please update source code each year to add new year.
 
