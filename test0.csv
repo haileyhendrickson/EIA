@@ -1,0 +1,25 @@
+,period,plantCode,plantName,fuel2002,fuelTypeDescription,state,stateDescription,primeMover,gross-generation,generation,gross-generation-units,generation-units
+0,2015,1020,Manti Lower,WAT,Hydroelectric Conventional,UT,Utah,HY,1425,1369,megawatthours,megawatthours
+1,2015,10154,Chocolate Bayou Works,ALL,Total,TX,Texas,ALL,244010,244010,megawatthours,megawatthours
+2,2015,10154,Chocolate Bayou Works,NG,Natural Gas,TX,Texas,ALL,244010,244010,megawatthours,megawatthours
+3,2015,10154,Chocolate Bayou Works,NG,Natural Gas,TX,Texas,GT,244010,244010,megawatthours,megawatthours
+4,2015,1020,Manti Lower,ALL,Total,UT,Utah,ALL,1425,1369,megawatthours,megawatthours
+5,2015,1020,Manti Lower,WAT,Hydroelectric Conventional,UT,Utah,ALL,1425,1369,megawatthours,megawatthours
+6,2016,10154,Power Island,NG,Natural Gas,TX,Texas,GT,248238,248238,megawatthours,megawatthours
+7,2016,1020,Manti Lower,ALL,Total,UT,Utah,ALL,1359,1318,megawatthours,megawatthours
+8,2016,1020,Manti Lower,WAT,Hydroelectric Conventional,UT,Utah,ALL,1359,1318,megawatthours,megawatthours
+9,2016,1020,Manti Lower,WAT,Hydroelectric Conventional,UT,Utah,HY,1359,1318,megawatthours,megawatthours
+10,2016,10154,Power Island,ALL,Total,TX,Texas,ALL,248238,248238,megawatthours,megawatthours
+11,2016,10154,Power Island,NG,Natural Gas,TX,Texas,ALL,248238,248238,megawatthours,megawatthours
+12,2017,1020,Manti Lower,ALL,Total,UT,Utah,ALL,2012,2012,megawatthours,megawatthours
+13,2017,10154,Power Island,NG,Natural Gas,TX,Texas,GT,214398,214398,megawatthours,megawatthours
+14,2017,10154,Power Island,NG,Natural Gas,TX,Texas,ALL,214398,214398,megawatthours,megawatthours
+15,2017,10154,Power Island,ALL,Total,TX,Texas,ALL,214398,214398,megawatthours,megawatthours
+16,2017,1020,Manti Lower,WAT,Hydroelectric Conventional,UT,Utah,HY,2012,2012,megawatthours,megawatthours
+17,2017,1020,Manti Lower,WAT,Hydroelectric Conventional,UT,Utah,ALL,2012,2012,megawatthours,megawatthours
+18,2018,1020,Manti Lower,ALL,Total,UT,Utah,ALL,1606,1566,megawatthours,megawatthours
+19,2018,1020,Manti Lower,WAT,Hydroelectric Conventional,UT,Utah,ALL,1606,1566,megawatthours,megawatthours
+20,2018,1020,Manti Lower,WAT,Hydroelectric Conventional,UT,Utah,HY,1606,1566,megawatthours,megawatthours
+21,2018,10154,Power Island,ALL,Total,TX,Texas,ALL,253090,253090,megawatthours,megawatthours
+22,2018,10154,Power Island,NG,Natural Gas,TX,Texas,ALL,253090,253090,megawatthours,megawatthours
+23,2018,10154,Power Island,NG,Natural Gas,TX,Texas,GT,253090,253090,megawatthours,megawatthours

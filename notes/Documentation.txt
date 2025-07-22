@@ -46,8 +46,7 @@ Worked on allowing users to select multiple units from different states. Tried O
 7/22-
 I actually figured out the multi select last night and didn't realize it. 
 Deleted all apostrophes from unit list, it was throwing errors.
-
-Add a 'reset' button for multiple pulls/mistakes
+Added a 'reset units' button for multiple pulls/mistakes
 
 
 Need to make pythonic

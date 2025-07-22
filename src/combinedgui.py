@@ -249,6 +249,7 @@ unit_count_var=tk.IntVar()
 codes_var=tk.StringVar()
 unit_name_var=tk.StringVar()
 
+
 # FUNCTIONS
 # Front page functions
 def select_output_file():
@@ -270,14 +271,15 @@ def submit():
     report = report_var.get()
     if report == 'Natural Gas Prices':
         timezone=timezoneDropdown.get()
+        status_lbl.configure(text='Running...')
+        root.update()
         natural_gas_report(startdate, enddate, timezone)
     if report == 'Electric Power Operations':
         # Filter out state names and get units
         selected_iids = treeview.selection()
-        unit_names = [treeview.item(iid)['text'] for iid in selected_iids]
-        print(unit_names)
+        selected_unit_names = [treeview.item(iid)['text'] for iid in selected_iids]
         actual_units = []
-        for unit_name in unit_names:
+        for unit_name in selected_unit_names:
             if len(treeview.selection()) > 0:
                 children = treeview.get_children(treeview.selection()[0])
             if not children and '(' in unit_name:
@@ -311,6 +313,7 @@ def show_second_dropdown(choice):
     report_var.set(choice)  # Creating a variable to use later
     if choice == 'Natural Gas Prices':
         title_lbl.configure(text='Natural Gas Prices Report')
+        status_lbl.configure(text='')
         root.update()
         # Forget old labels
         start_year_label.grid_forget()
@@ -318,6 +321,7 @@ def show_second_dropdown(choice):
         end_year_dropdown.grid_forget()
         treeview.grid_forget()
         scrollbar.grid_forget()
+        reset_button.grid_forget()
 
         # Natural Gas labels here
         ba_label.grid(row=3, column=1)
@@ -333,6 +337,7 @@ def show_second_dropdown(choice):
 
     if choice == 'Electric Power Operations':
         title_lbl.configure(text='Electric Power Operations Report')
+        status_lbl.configure(text='')
         root.update()
         # Forget old labels
         ba_label.grid_forget()
@@ -353,6 +358,7 @@ def show_second_dropdown(choice):
         status_lbl.grid(row=7,column=0)
         treeview.grid(row=6,column=2, sticky='nsew')
         scrollbar.grid(row=6,column=3, sticky='ns')
+        reset_button.grid(row=5,column=2)
 
 
 # Natural Gas Report widget functions
@@ -372,14 +378,18 @@ def find_end_date():
     enddate = cal.get_date()
     enddate_label.configure(text=f'End date: {enddate}')
 
+
 # Electric Power Operations Report widget functions
-def get_unit_names():
+def reset_unit_names():
     '''
-    IDK, this method is supposed to help me get the actual unit names
+    This method resets the list of unit names in case of error or a 2nd pull.
     '''
-    selected_iids = treeview.selection()
-    selected_unit_names = [treeview.item(iid)['text'] for iid in selected_iids]
-    return selected_unit_names
+    treeview.selection_remove(treeview.selection())
+    global selected_units
+    selected_units.clear()
+    units_var.set("")
+    unit_display_names_var.set("")
+    unit_count_var.set(0)
 
 def on_row_click(event):
     '''
@@ -404,7 +414,7 @@ def on_row_click(event):
 
 
 # WIDGETS
-# First page widgets
+# Widgets for both reports
 options1 = ['Select Report Type', 'Natural Gas Prices', 'Electric Power Operations']
 var1 = tk.StringVar(value=options1[0])
 dropdown1 = CTkComboBox(root, variable=var1, values=options1, command=show_second_dropdown,
@@ -416,6 +426,9 @@ output_file_label = CTkLabel(root, text='No path selected', font=('Arial',15),
                              text_color='#04033A')
 title_lbl = CTkLabel(root, text='EIA Generation Data', font=('Arial',25,'bold'),
                      text_color='#04033A')
+status_lbl = CTkLabel(root, text='', font=('Arial',20), text_color='#04033A')
+sub_btn=CTkButton(master=root,text = 'Submit', command = submit, corner_radius=32,
+                  fg_color='#162157', hover_color='#6D7DCF')
 
 # Natural Gas widgets
 timezone_label = CTkLabel(root, text = 'Timezone:', font=('Arial',20), text_color='#04033A')
@@ -469,10 +482,8 @@ scrollbar = ttk.Scrollbar(root, orient='vertical', command=treeview.yview)
 treeview.configure(yscrollcommand=scrollbar.set)
 treeview.bind('<ButtonRelease-1>', on_row_click)
 
-# All other widgets
-status_lbl = CTkLabel(root, text='', font=('Arial',20), text_color='#04033A')
-sub_btn=CTkButton(master=root,text = 'Submit', command = submit, corner_radius=32,
-                  fg_color='#162157', hover_color='#6D7DCF')
+reset_button = CTkButton(root, text='Reset Unit Selection', command=reset_unit_names,
+                               corner_radius=32,fg_color='#162157', hover_color='#6D7DCF')
 
 
 # Grid- first page
