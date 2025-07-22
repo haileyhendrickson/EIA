@@ -125,7 +125,7 @@ def natural_gas_report(startdate, enddate, timezone):
             df.to_csv(f'test{counter}.csv')  # Saving chunks to csvs to combine later
         except Exception as e:
             print(f'error: {e}')
-            status_lbl.configure(text='Error. Try again.')  # Updating label if API pull fails
+            status_lbl.configure(text=f'Error: {e}. Try again.')  # Updating label if API pull fails
             root.update()
         totalrows -= 5000  # Take off rows that just printed
         offset += 5000  # Offsets so I can pull the next chunk of data next time
