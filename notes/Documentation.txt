@@ -41,11 +41,15 @@ Formatted unit selection in GUI, used a tuple to get multiple units to run in th
 Have a basic working product (for report B), pending feedback.
 
 7/21-
-When I run it from git, I can select different plants from different states. When I try with the .exe file, it breaks. So weird.
-Apparently I need copmletely different logic. It might be easier to have two listboxes. One for states, one for plants?
-NOTE FOR USE: For the electric power operations report, the user must select all states first, then the units. (maybe change later?)
+Worked on allowing users to select multiple units from different states. Tried OG code, listboxes, treeview. Still a work in progress.
 
-Make it so you can select multiple states
+7/22-
+I actually figured out the multi select last night and didn't realize it. 
+Deleted all apostrophes from unit list, it was throwing errors.
+
+Add a 'reset' button for multiple pulls/mistakes
+
+
 Need to make pythonic
 Need to professionalize github
 
