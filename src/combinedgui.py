@@ -19,33 +19,20 @@ from tkcalendar import Calendar
 
 from state_units import state_options  # File containing list of all units, grouped by state
 
-# FUNCTIONS, including backend for both report types and cleaning function
-# Formats all numbers in called rows to have two decimal places
-def format_excel_cells(file, sheet, min_col, max_col):
-    '''
-    This method formats the numerical values to two decimal places.
-    '''
-    wb = openpyxl.load_workbook(file)
-    sheet = wb[sheet]
-    for row in sheet.iter_rows(min_col=min_col, max_col=max_col, min_row=2):
-        for cell in row:
-            cell.number_format = '0.00'
-    wb.save(file)
+# =============================================================================
+# CONSTANTS AND CONFIGURATION
+# =============================================================================
 
 API_KEY = os.getenv('EIA_API_KEY', 'h6SzHD7npQ0r1YVfC7HZHEMu7LZ74yx2m9EcbSHD')
-# Natural Gas Prices Code
-def natural_gas_report(startdate, enddate, timezone):
-    '''
-    This method pulls the EIA Natural Gas Report and cleans it mildly.
-    '''
-    map = {  # Finds UTC difference and associated time code, based on 24 major timezones
+
+map = {  # Finds UTC difference and associated time code, based on 24 major timezones
         ('Universal Time'): ('00', '(UTC)', '+'),
         ('Mountain Time'): ('07', '(MST)', '-'),
         ('Central Time'): ('06', '(CST)', '-'),
         ('Pacific Time'): ('08', '(PST)', '-'),
         ('Eastern Time'): ('05', '(EST)', '-'),
         ('European Central Time'): ('01', '(ECT)', '+'),
-        ('Eastern Eurpoean Time'): ('02', '(EET)', '+'),
+        ('Eastern European Time'): ('02', '(EET)', '+'),
         ('Eastern African Time'): ('03', '(EAT)', '+'),
         ('Near East Time'): ('04', '(NET)', '+'),
         ('Pakistan Lahore Time'): ('05', '(PLT)', '+'),
@@ -64,6 +51,30 @@ def natural_gas_report(startdate, enddate, timezone):
         ('Central African Time'): ('01', 'CAT', '-')
     }
 
+years = ['2001', '2002', '2003', '2004', '2005', '2006', '2007', '2008', '2009', '2010', '2011',
+         '2012', '2013', '2014', '2015', '2016', '2017', '2018', '2019', '2020', '2021', '2022',
+         '2023', '2024', '2025']
+
+# =============================================================================
+# DATA PROCESSING FUNCTIONS
+# =============================================================================
+
+def format_excel_cells(file, sheet, min_col, max_col):
+    '''
+    This method formats the numerical values to two decimal places.
+    '''
+    wb = openpyxl.load_workbook(file)
+    sheet = wb[sheet]
+    for row in sheet.iter_rows(min_col=min_col, max_col=max_col, min_row=2):
+        for cell in row:
+            cell.number_format = '0.00'
+    wb.save(file)
+
+# Natural Gas Prices Code
+def natural_gas_report(startdate, enddate, timezone):
+    '''
+    This method pulls the EIA Natural Gas Report and cleans it mildly.
+    '''
     hours, timecode, operand = map.get((timezone), ('unknown'))
     ba=ba_var.get()
 
@@ -236,21 +247,10 @@ def electric_power_operations_report(startyr, endyr):
     status_lbl.configure(text='Finished!')
     root.update()
 
-# Tkinter program
-root = CTk()
-root.geometry('800x600')
-set_appearance_mode('light')
-report_var=tk.StringVar()
-ba_var=tk.StringVar()  # Needed for natural gas report
-units_var=tk.StringVar()  # Needed for electric power operations report
-startyr_var=tk.IntVar()
-endyr_var=tk.IntVar()
-unit_count_var=tk.IntVar()
-codes_var=tk.StringVar()
-unit_name_var=tk.StringVar()
 
-
-# FUNCTIONS
+# =============================================================================
+# TKINTER WIDGET FUNCTIONS
+# =============================================================================
 # Front page functions
 def select_output_file():
     '''
@@ -360,7 +360,6 @@ def show_second_dropdown(choice):
         scrollbar.grid(row=6,column=3, sticky='ns')
         reset_button.grid(row=5,column=2)
 
-
 # Natural Gas Report widget functions
 def find_start_date():
     '''
@@ -377,7 +376,6 @@ def find_end_date():
     global enddate
     enddate = cal.get_date()
     enddate_label.configure(text=f'End date: {enddate}')
-
 
 # Electric Power Operations Report widget functions
 def reset_unit_names():
@@ -413,8 +411,25 @@ def on_row_click(event):
             return 'break'
 
 
-# WIDGETS
-# Widgets for both reports
+# =============================================================================
+# TKINTER PROGRAM
+# =============================================================================
+root = CTk()
+root.geometry('800x600')
+set_appearance_mode('light')
+report_var=tk.StringVar()
+ba_var=tk.StringVar()  # Needed for natural gas report
+units_var=tk.StringVar()  # Needed for electric power operations report
+startyr_var=tk.IntVar()
+endyr_var=tk.IntVar()
+unit_count_var=tk.IntVar()
+codes_var=tk.StringVar()
+unit_name_var=tk.StringVar()
+
+
+# =============================================================================
+# TKINTER WIDGETS
+# =============================================================================
 options1 = ['Select Report Type', 'Natural Gas Prices', 'Electric Power Operations']
 var1 = tk.StringVar(value=options1[0])
 dropdown1 = CTkComboBox(root, variable=var1, values=options1, command=show_second_dropdown,
@@ -434,7 +449,7 @@ sub_btn=CTkButton(master=root,text = 'Submit', command = submit, corner_radius=3
 timezone_label = CTkLabel(root, text = 'Timezone:', font=('Arial',20), text_color='#04033A')
 timezoneDropdown = CTkComboBox(master=root, values=['Universal Time', 'Mountain Time',
                                'Pacific Time', 'Central Time', 'Eastern Time',
-                               'European Central Time', 'Eastern Eurpoean Time',
+                               'European Central Time', 'Eastern European Time',
                                'Eastern African Time','Near East Time','Pakistan Lahore Time',
                                'Bangladesh Standard Time','Vietnam Standard Time',
                                'China Taiwan Time','Japan Standard Time','Australia Eastern Time',
@@ -457,16 +472,9 @@ ba_entry = CTkEntry(root, textvariable = ba_var, font=('Arial',20), text_color='
 unit_display_names_var = tk.StringVar()
 selected_units=set()
 start_year_label = CTkLabel(root, text='Choose Start and End year:', font=('Arial',20))
-start_year_dropdown = CTkComboBox(root, values=['2001', '2002', '2003', '2004', '2005', '2006',
-                                                '2007', '2008', '2009', '2010','2011','2012',
-                                                '2013', '2014', '2015', '2016', '2017', '2018',
-                                                '2019', '2020', '2021', '2022', '2023', '2024',
-                                                '2025'], font=('Arial',20))
-end_year_dropdown = CTkComboBox(root, values=['2001', '2002', '2003', '2004', '2005', '2006',
-                                              '2007', '2008', '2009', '2010','2011', '2012',
-                                              '2013', '2014', '2015', '2016', '2017', '2018',
-                                              '2019', '2020', '2021', '2022', '2023', '2024',
-                                              '2025'], font=('Arial',20))
+
+start_year_dropdown = CTkComboBox(root, values=years, font=('Arial',20))
+end_year_dropdown = CTkComboBox(root, values=years, font=('Arial',20))
 
 treeview = ttk.Treeview(root, selectmode='extended')
 treeview.heading('#0', text='Select Units:', anchor='w')
@@ -485,8 +493,9 @@ treeview.bind('<ButtonRelease-1>', on_row_click)
 reset_button = CTkButton(root, text='Reset Unit Selection', command=reset_unit_names,
                                corner_radius=32,fg_color='#162157', hover_color='#6D7DCF')
 
-
-# Grid- first page
+# =============================================================================
+# TKINTER INITIAL GRID AND START
+# =============================================================================
 output_file_button.grid(row=1, column=0)
 output_file_label.grid(row=2, column=0)
 title_lbl.grid(row=0, column=2)
