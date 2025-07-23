@@ -415,7 +415,7 @@ def on_row_click(event):
 # TKINTER PROGRAM
 # =============================================================================
 root = CTk()
-root.geometry('800x600')
+root.geometry('1400x800')
 set_appearance_mode('light')
 report_var=tk.StringVar()
 ba_var=tk.StringVar()  # Needed for natural gas report

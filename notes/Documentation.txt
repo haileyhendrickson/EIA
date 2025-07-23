@@ -25,7 +25,7 @@ Fixed the hours issues, so they line up with the requested date range, despite t
 Fixed indexing error. Justin F approves! Uploaded to sharepoint with installation instructions.
 
 7/9-
-Talked with dad today. He needs facility generation data, also available at EIA. its a different report, but it
+Talked with Don today. He needs facility generation data, also available at EIA. its a different report, but it
 pulls from the same API, so I'll just put it here for now. Working on main API pull framework.
 
 7/10-
@@ -48,10 +48,9 @@ I actually figured out the multi select last night and didn't realize it.
 Deleted all apostrophes from unit list, it was throwing errors.
 Added a 'reset units' button for multiple pulls/mistakes
 
+7/23-
+Resized window.
 
-Need to make pythonic
-Need to professionalize github
 
 NOTES FOR UPDATING:
 You can only pull through the current year. Please update source code each year to add new year.
-
