@@ -473,7 +473,8 @@ ba_entry = CTkEntry(root, textvariable = ba_var, font=('Arial',20), text_color='
 # Electric Power Operations widgets
 unit_display_names_var = tk.StringVar()
 selected_units=set()
-start_year_label = CTkLabel(root, text='Choose Start and End year:', font=('Arial',20))
+start_year_label = CTkLabel(root, text='Choose Start and End year:', font=('Arial',20),
+                            text_color='#04033A')
 
 start_year_dropdown = CTkComboBox(root, values=years, font=('Arial',20))
 end_year_dropdown = CTkComboBox(root, values=years, font=('Arial',20))
