@@ -17,12 +17,12 @@ A GUI-based Python tool to query two reports from the EIA API. The program effic
    cd EIA
 
 ## Use
-1. Download the `.exe` file
-2. Run the application
-3. Select your report type
-4. Choose date range
-5. Click "Submit"
-6. Export to Excel
+Download the `.exe` file and enjoy!
+
+Tutorial Video (click to watch):
+
+[![Watch the video](https://img.youtube.com/vi/s2KnLxkeQbk/hqdefault.jpg)](https://www.youtube.com/watch?v=s2KnLxkeQbk)
+
 
 ### For End Users
 The application comes pre-configured with an API key - no setup required! Just download and run.
