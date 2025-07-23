@@ -1,0 +1,23 @@
+# Python virtual environment
+venv/
+
+# Python bytecode
+__pycache__/
+*.py[cod]
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Ignore dotenv files with secrets
+.env
+
+# Ignore logs or temp data
+*.log
+*.tmp
+
+# Don't ignore custom spec files
+!spec/*.spec.env

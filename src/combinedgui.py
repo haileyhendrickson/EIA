@@ -3,6 +3,7 @@ This is a GUI program desined to pull 2 reports: Hourly Natural Gas Prices
 and Electric Power Operations Generation, cleaned and organized into an excel spreadsheet.
 '''
 import os
+from dotenv import load_dotenv
 import sys
 from datetime import datetime, timedelta
 
@@ -23,7 +24,8 @@ from state_units import state_options  # File containing list of all units, grou
 # CONSTANTS AND CONFIGURATION
 # =============================================================================
 
-API_KEY = os.getenv('EIA_API_KEY', 'h6SzHD7npQ0r1YVfC7HZHEMu7LZ74yx2m9EcbSHD')
+load_dotenv()
+API_KEY = os.getenv('EIA_API_KEY')
 
 map = {  # Finds UTC difference and associated time code, based on 24 major timezones
         ('Universal Time'): ('00', '(UTC)', '+'),
