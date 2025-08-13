@@ -1,0 +1,25 @@
+,period,plantCode,plantName,fuel2002,fuelTypeDescription,state,stateDescription,primeMover,gross-generation,generation,gross-generation-units,generation-units
+0,2012,11,H Neely Henry Dam,WAT,Hydroelectric Conventional,AL,Alabama,ALL,129664,128404,megawatthours,megawatthours
+1,2012,11,H Neely Henry Dam,WAT,Hydroelectric Conventional,AL,Alabama,HY,129664,128404,megawatthours,megawatthours
+2,2012,10050,Fourche Creek Wastewater,ALL,Total,AR,Arkansas,ALL,6281,6155.38,megawatthours,megawatthours
+3,2012,11,H Neely Henry Dam,ALL,Total,AL,Alabama,ALL,129664,128404,megawatthours,megawatthours
+4,2012,10050,Fourche Creek Wastewater,OBG,other renewables,AR,Arkansas,IC,5679.8,5566.2,megawatthours,megawatthours
+5,2012,10050,Fourche Creek Wastewater,NG,Natural Gas,AR,Arkansas,IC,601.2,589.18,megawatthours,megawatthours
+6,2012,10050,Fourche Creek Wastewater,OBG,other renewables,AR,Arkansas,ALL,5679.8,5566.2,megawatthours,megawatthours
+7,2012,10050,Fourche Creek Wastewater,NG,Natural Gas,AR,Arkansas,ALL,601.2,589.18,megawatthours,megawatthours
+8,2013,10050,Fourche Creek Wastewater,NG,Natural Gas,AR,Arkansas,IC,1024.74,1004.24,megawatthours,megawatthours
+9,2013,10050,Fourche Creek Wastewater,OBG,other renewables,AR,Arkansas,IC,5440.26,5331.46,megawatthours,megawatthours
+10,2013,11,H Neely Henry Dam,ALL,Total,AL,Alabama,ALL,299054,297810,megawatthours,megawatthours
+11,2013,10050,Fourche Creek Wastewater,OBG,other renewables,AR,Arkansas,ALL,5440.26,5331.46,megawatthours,megawatthours
+12,2013,11,H Neely Henry Dam,WAT,Hydroelectric Conventional,AL,Alabama,HY,299054,297810,megawatthours,megawatthours
+13,2013,11,H Neely Henry Dam,WAT,Hydroelectric Conventional,AL,Alabama,ALL,299054,297810,megawatthours,megawatthours
+14,2013,10050,Fourche Creek Wastewater,ALL,Total,AR,Arkansas,ALL,6465,6335.7,megawatthours,megawatthours
+15,2013,10050,Fourche Creek Wastewater,NG,Natural Gas,AR,Arkansas,ALL,1024.74,1004.24,megawatthours,megawatthours
+16,2014,11,H Neely Henry Dam,ALL,Total,AL,Alabama,ALL,199817,198568,megawatthours,megawatthours
+17,2014,11,H Neely Henry Dam,WAT,Hydroelectric Conventional,AL,Alabama,ALL,199817,198568,megawatthours,megawatthours
+18,2014,11,H Neely Henry Dam,WAT,Hydroelectric Conventional,AL,Alabama,HY,199817,198568,megawatthours,megawatthours
+19,2014,10050,Fourche Creek Wastewater,NG,Natural Gas,AR,Arkansas,IC,2925.01,2866.51,megawatthours,megawatthours
+20,2014,10050,Fourche Creek Wastewater,OBG,other renewables,AR,Arkansas,ALL,4863.99,4766.71,megawatthours,megawatthours
+21,2014,10050,Fourche Creek Wastewater,NG,Natural Gas,AR,Arkansas,ALL,2925.01,2866.51,megawatthours,megawatthours
+22,2014,10050,Fourche Creek Wastewater,ALL,Total,AR,Arkansas,ALL,7789,7633.22,megawatthours,megawatthours
+23,2014,10050,Fourche Creek Wastewater,OBG,other renewables,AR,Arkansas,IC,4863.99,4766.71,megawatthours,megawatthours

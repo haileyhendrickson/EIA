@@ -72,7 +72,7 @@ def format_excel_cells(file, sheet, min_col, max_col):
             cell.number_format = '0.00'
     wb.save(file)
 
-# Natural Gas Prices Code
+# Natural Gas Generation Code
 def natural_gas_report(startdate, enddate, timezone):
     '''
     This method pulls the EIA Natural Gas Report and cleans it mildly.
@@ -271,7 +271,7 @@ def submit():
     After user gives all inputs, runs all of the backend code, depending on report type.
     '''
     report = report_var.get()
-    if report == 'Natural Gas Prices':
+    if report == 'Natural Gas Generation':
         timezone=timezoneDropdown.get()
         status_lbl.configure(text='Running...')
         root.update()
@@ -313,8 +313,8 @@ def show_second_dropdown(choice):
     This method changes the widgets on the GUI to match up with the desired report type inputs.
     '''
     report_var.set(choice)  # Creating a variable to use later
-    if choice == 'Natural Gas Prices':
-        title_lbl.configure(text='Natural Gas Prices Report')
+    if choice == 'Natural Gas Generation':
+        title_lbl.configure(text='Natural Gas Generation Report')
         status_lbl.configure(text='')
         root.update()
         # Forget old labels
@@ -432,7 +432,7 @@ unit_name_var=tk.StringVar()
 # =============================================================================
 # TKINTER WIDGETS
 # =============================================================================
-options1 = ['Select Report Type', 'Natural Gas Prices', 'Electric Power Operations']
+options1 = ['Select Report Type', 'Natural Gas Generation', 'Electric Power Operations']
 var1 = tk.StringVar(value=options1[0])
 dropdown1 = CTkComboBox(root, variable=var1, values=options1, command=show_second_dropdown,
                         font=('Arial',20))
